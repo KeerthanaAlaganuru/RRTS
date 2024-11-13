@@ -1,0 +1,96 @@
+
+
+CREATE DATABASE road_repair;
+
+USE road_repair;
+
+CREATE TABLE Admin (
+    admin_id INT PRIMARY KEY,
+    admin_name VARCHAR(100) NOT NULL,
+    admin_email VARCHAR(100) UNIQUE NOT NULL,
+    admin_password VARCHAR(255) NOT NULL,
+    admin_phone VARCHAR(15)
+);
+
+
+
+INSERT INTO Admin (admin_id, admin_name,admin_email, admin_password, admin_phone) 
+VALUES 
+(742, 'Keerthana', 'keerthana2126@gmail.com', 'keerthana@742', '6304525891'),
+(247, 'Ganesh', 'ganesh2621@gmail.com', 'ganesh@247', '9121353922');
+
+
+
+CREATE TABLE Supervisors (
+    supervisor_id INT PRIMARY KEY,
+    admin_id INT,  -- To track which admin created the supervisor
+    supervisor_name VARCHAR(100) NOT NULL,
+    supervisor_email VARCHAR(100) UNIQUE NOT NULL,
+    supervisor_password VARCHAR(255) NOT NULL,
+    supervisor_phone VARCHAR(15),
+    assigned_complaints INT DEFAULT 0,
+    FOREIGN KEY (admin_id) REFERENCES Admin(admin_id) ON DELETE SET NULL
+);
+
+CREATE TABLE citizens (
+    citizen_id INT PRIMARY KEY AUTO INCREMENT,
+    citizen_name VARCHAR(100) NOT NULL,
+    citizen_email VARCHAR(100) UNIQUE NOT NULL,
+    citizen_password VARCHAR(255) NOT NULL,
+    citizen_phone VARCHAR(15),
+    citizen_address TEXT
+    
+);
+
+CREATE TABLE IF NOT EXISTS contact_us (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(15),
+    message TEXT NOT NULL,
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE complaintsbycitizen (
+    complaint_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    location VARCHAR(50) NOT NULL,
+    address TEXT NOT NULL,
+    complaint_type VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Clerks (
+    clerk_id INT PRIMARY KEY,
+    admin_id INT,  -- To track which admin created the clerk
+    clerk_name VARCHAR(100) NOT NULL,
+    clerk_email VARCHAR(100) UNIQUE NOT NULL,
+    clerk_password VARCHAR(255) NOT NULL,
+    clerk_phone VARCHAR(15),
+    assigned_tasks INT DEFAULT 0,
+    FOREIGN KEY (admin_id) REFERENCES Admin(admin_id) ON DELETE SET NULL
+);
+
+CREATE TABLE complaintsbyclerk ( 
+    complaint_id INT AUTO_INCREMENT PRIMARY KEY,  
+    name VARCHAR(255) NOT NULL, -- Clerk's name
+    phone VARCHAR(20) NOT NULL, -- Clerk's phone number
+    location VARCHAR(50) NOT NULL, -- Clerk's location (e.g., Urban/Rural)
+    address TEXT NOT NULL, -- Clerk's address
+    complaint_type VARCHAR(100) NOT NULL, -- Type of complaint or update
+    message TEXT NOT NULL, -- Clerk's message or update details
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE road_repair_reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    road_location VARCHAR(255) NOT NULL,
+    complaint_type VARCHAR(50) NOT NULL,
+    raw_material VARCHAR(50) NOT NULL,
+    machine_required VARCHAR(50) NOT NULL,
+    labour_count INT NOT NULL,
+    priority INT NOT NULL,
+    report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
